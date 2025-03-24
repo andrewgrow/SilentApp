@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SilentApp</string>
+    <string name="silent_app_tile_label">Тишина в Эфире</string>
 </resources>
