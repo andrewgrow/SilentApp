@@ -22,22 +22,32 @@ class SilentAppTileService: TileService() {
         when (disturbStatus) {
             INTERRUPTION_FILTER_ALL -> {
                 println("The Do Not Disturb mode is disabled. All notifications are granted.")
-                qsTile.state = STATE_INACTIVE
+                deactivate()
             }
             INTERRUPTION_FILTER_PRIORITY -> {
                 println("The Do Not Disturb mode is enabled. Only priority notifications are granted.")
-                qsTile.state = STATE_ACTIVE
+                activate()
             }
             INTERRUPTION_FILTER_NONE -> {
                 println("The Do Not Disturb mode is enabled. All notifications are disabled.")
-                qsTile.state = STATE_ACTIVE
+                activate()
             }
             INTERRUPTION_FILTER_ALARMS -> {
                 println("The Do Not Disturb mode is enabled. Only alarms granted.")
-                qsTile.state = STATE_ACTIVE
+                activate()
             }
         }
         qsTile.updateTile()
+    }
+
+    private fun activate() {
+        qsTile.state = STATE_ACTIVE
+        qsTile.label = getString(R.string.silent_app_tile_label_on)
+    }
+
+    private fun deactivate() {
+        qsTile.state = STATE_INACTIVE
+        qsTile.label = getString(R.string.silent_app_tile_label_off)
     }
 
     override fun onStopListening() {
@@ -52,22 +62,22 @@ class SilentAppTileService: TileService() {
             INTERRUPTION_FILTER_ALL -> {
                 println("The Do Not Disturb mode is disabled. Change to enabled as Priority.")
                 changeDndMode(applicationContext, INTERRUPTION_FILTER_PRIORITY)
-                qsTile.state = STATE_ACTIVE
+                activate()
             }
             INTERRUPTION_FILTER_PRIORITY -> {
                 println("The Do Not Disturb mode is enabled. Change to disabled.")
                 changeDndMode(applicationContext, INTERRUPTION_FILTER_ALL)
-                qsTile.state = STATE_INACTIVE
+                deactivate()
             }
             INTERRUPTION_FILTER_NONE -> {
                 println("The Do Not Disturb mode is enabled. Change to disabled.")
                 changeDndMode(applicationContext, INTERRUPTION_FILTER_ALL)
-                qsTile.state = STATE_INACTIVE
+                deactivate()
             }
             INTERRUPTION_FILTER_ALARMS -> {
                 println("The Do Not Disturb mode is enabled. Change to disabled.")
                 changeDndMode(applicationContext, INTERRUPTION_FILTER_ALL)
-                qsTile.state = STATE_INACTIVE
+                deactivate()
             }
         }
         qsTile.updateTile()
@@ -111,7 +121,7 @@ fun changeDndMode(context: Context, dndMode: Int) {
     if (!notificationManager.isNotificationPolicyAccessGranted) {
         println("Access to notification policy is not granted. Please enable it in the settings.")
         val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.flags = FLAG_ACTIVITY_NEW_TASK
         context.startActivity(intent)
         return
     }
