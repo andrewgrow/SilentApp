@@ -2,6 +2,8 @@
 
 SilentApp is a simple Android application that allows you to quickly toggle the Do Not Disturb (DnD) mode on your device and manage the permission required to change the notifications status mode. When toggled on, the app always sets the DnD mode to "Priority notifications" mode, and when toggled off, it restores the normal notifications mode.
 
+![Preview of the app](images/preview.gif)
+
 ## Features
 
 - **Toggle DnD Mode:**  
